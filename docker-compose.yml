@@ -34,14 +34,12 @@ services:
     build:
       context: .
       dockerfile: ./docker/images/database/Dockerfile.dev
-    restart: on-failure
+    restart: unless-stopped
     volumes:
       - type: bind
         source: ./docker/data/mysql
         target: /var/lib/mysql
-      - type: bind
-        source: mysqldata
-        target: /var/lib/mysql
+      - mysqldata:/var/lib/mysql
     environment:
       MYSQL_DATABASE: app
       MYSQL_ROOT_PASSWORD: root
@@ -66,7 +64,7 @@ services:
     networks:
       - app-network
   queue:
-    restart: on-failure
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./docker/images/app/Dockerfile.dev
@@ -91,7 +89,7 @@ services:
     networks:
       - app-network
   scheduler:
-    restart: on-failure
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./docker/images/scheduler/Dockerfile.dev
